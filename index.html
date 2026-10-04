@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>運命ガチャ</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at top, #3d3270, #15152b 60%);
+    color: white;
+}
+
+.screen {
+    display: none;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.screen.active {
+    display: flex;
+}
+
+.menu {
+    width: 100%;
+    max-width: 500px;
+    padding: 30px 25px;
+    background: rgba(0, 0, 0, 0.55);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 25px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    text-align: center;
+}
+
+.title {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    text-shadow: 0 0 20px #9b7cff;
+}
+
+.subtitle {
+    color: #aaa;
+    margin-bottom: 25px;
+}
+
+.coins {
+    padding: 13px;
+    margin-bottom: 20px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 15px;
+    font-size: 20px;
+}
+
+.button {
+    width: 100%;
+    padding: 16px;
+    margin: 7px 0;
+    border: none;
+    border-radius: 15px;
+    background: linear-gradient(90deg, #6648ff, #9b62ff);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.button:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 20px rgba(155,98,255,0.6);
+}
+
+.button:active {
+    transform: scale(0.97);
+}
+
+.back {
+    background: linear-gradient(90deg, #444, #666);
+}
+
+.login-days {
+    display: flex;
+    gap: 8px;
+    margin: 20px 0;
+}
+
+.login-day {
+    flex: 1;
+    padding: 12px 5px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    font-size: 13px;
+}
+
+.login-day.current {
+    border: 2px solid #a77bff;
+    box-shadow: 0 0 15px rgba(167,123,255,0.5);
+}
+
+.login-day.received {
+    opacity: 0.45;
+}
+
+.reward {
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+.message {
+    min-height: 25px;
+    margin: 12px 0;
+    color: #ffd76a;
+}
+
+.footer {
+    margin-top: 20px;
+    color: #777;
+    font-size: 12px;
+}
+
+.game-card {
+    padding: 18px;
+    margin: 10px 0;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.08);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.game-card:hover {
+    background: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+}
+
+.game-card h3 {
+    margin: 0 0 5px;
+}
+
+.game-card p {
+    margin: 0;
+    color: #aaa;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ========================= -->
+<!-- メインメニュー -->
+<!-- ========================= -->
+
+<div id="mainScreen" class="screen active">
+
+    <div class="menu">
+
+        <div class="title">GACHA</div>
+
+        <div class="subtitle">
+            運命を引き当てろ。
+        </div>
+
+        <div class="coins">
+            🪙 コイン：
+            <span id="mainCoins">1000</span>
+        </div>
+
+        <button class="button" onclick="openScreen('gachaScreen')">
+            🎰 ガチャを回す
+        </button>
+
+        <button class="button" onclick="openScreen('miniGameEntry')">
+            🎮 ミニゲーム
+        </button>
+
+        <button class="button" onclick="openScreen('collectionScreen')">
+            📖 キャラクター図鑑
+        </button>
+
+        <button class="button" onclick="openScreen('itemScreen')">
+            🎒 アイテム
+        </button>
+
+        <button class="button" onclick="openLoginBonus()">
+            🎁 ログインボーナス
+        </button>
+
+        <button class="button" onclick="openScreen('settingsScreen')">
+            ⚙️ 設定
+        </button>
+
+        <div class="footer">
+            Gacha Game
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- ガチャ画面 -->
+<!-- ========================= -->
+
+<div id="gachaScreen" class="screen">
+
+    <div class="menu">
+
+        <div class="title">🎰 GACHA</div>
+
+        <div class="coins">
+            🪙 <span id="gachaCoins">1000</span>
+        </div>
+
+        <div class="message">
+            ガチャ画面はこれから作ります！
+        </div>
+
+        <button class="button back" onclick="openScreen('mainScreen')">
+            ← メインメニューへ
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- ミニゲーム入口 -->
+<!-- ========================= -->
+
+<div id="miniGameEntry" class="screen">
+
+    <div class="menu">
+
+        <div class="title">🎮 MINI GAME</div>
+
+        <div class="subtitle">
+            ミニゲームでコインを集めよう！
+        </div>
+
+        <button class="button" onclick="openScreen('miniGameMenu')">
+            🎮 ミニゲームへ
+        </button>
+
+        <button class="button back" onclick="openScreen('mainScreen')">
+            ← メインメニューへ
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- ミニゲーム専用メニュー -->
+<!-- ========================= -->
+
+<div id="miniGameMenu" class="screen">
+
+    <div class="menu">
+
+        <div class="title">🎮 MINI GAME</div>
+
+        <div class="coins">
+            🪙 <span id="miniCoins">1000</span>
+        </div>
+
+        <div class="game-card">
+            <h3>🍀 運試し</h3>
+            <p>あなたの運を試そう！</p>
+        </div>
+
+        <div class="game-card">
+            <h3>🎯 ターゲット</h3>
+            <p>タイミングを狙ってコインを獲得！</p>
+        </div>
+
+        <div class="game-card">
+            <h3>🔮 ???</h3>
+            <p>COMING SOON...</p>
+        </div>
+
+        <button class="button back" onclick="openScreen('miniGameEntry')">
+            ← 戻る
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- 図鑑 -->
+<!-- ========================= -->
+
+<div id="collectionScreen" class="screen">
+
+    <div class="menu">
+
+        <div class="title">📖 図鑑</div>
+
+        <div class="message">
+            キャラクター図鑑はこれから作ります！
+        </div>
+
+        <button class="button back" onclick="openScreen('mainScreen')">
+            ← メインメニューへ
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- アイテム -->
+<!-- ========================= -->
+
+<div id="itemScreen" class="screen">
+
+    <div class="menu">
+
+        <div class="title">🎒 アイテム</div>
+
+        <div class="message">
+            アイテム画面はこれから作ります！
+        </div>
+
+        <button class="button back" onclick="openScreen('mainScreen')">
+            ← メインメニューへ
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- ログインボーナス -->
+<!-- ========================= -->
+
+<div id="loginScreen" class="screen">
+
+    <div class="menu">
+
+        <div class="title">🎁 LOGIN BONUS</div>
+
+        <div class="subtitle">
+            5日間ログインして報酬を受け取ろう！
+        </div>
+
+        <div class="login-days">
+
+            <div class="login-day" id="day1">
+                1日目
+                <div class="reward">🪙100</div>
+            </div>
+
+            <div class="login-day" id="day2">
+                2日目
+                <div class="reward">🪙200</div>
+            </div>
+
+            <div class="login-day" id="day3">
+                3日目
+                <div class="reward">🪙300</div>
+            </div>
+
+            <div class="login-day" id="day4">
+                4日目
+                <div class="reward">🪙500</div>
+            </div>
+
+            <div class="login-day" id="day5">
+                5日目
+                <div class="reward">🪙1000</div>
+            </div>
+
+        </div>
+
+        <div class="message" id="loginMessage"></div>
+
+        <button class="button" id="loginButton" onclick="receiveLoginBonus()">
+            🎁 報酬を受け取る
+        </button>
+
+        <button class="button back" onclick="openScreen('mainScreen')">
+            ← メインメニューへ
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- 設定 -->
+<!-- ========================= -->
+
+<div id="settingsScreen" class="screen">
+
+    <div class="menu">
+
+        <div class="title">⚙️ 設定</div>
+
+        <div class="message">
+            設定画面はこれから作ります！
+        </div>
+
+        <button class="button back" onclick="openScreen('mainScreen')">
+            ← メインメニューへ
+        </button>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   データ
+========================= */
+
+let coins = Number(localStorage.getItem("coins"));
+
+if (isNaN(coins)) {
+    coins = 1000;
+}
+
+
+/*
+   ログイン日数
+   1～5
+*/
+
+let loginDay = Number(localStorage.getItem("loginDay"));
+
+if (isNaN(loginDay) || loginDay < 1 || loginDay > 5) {
+    loginDay = 1;
+}
+
+
+/*
+   最後にログインボーナスを
+   受け取った日
+*/
+
+let lastLogin = localStorage.getItem("lastLogin");
+
+
+/* 報酬 */
+
+const loginRewards = [
+    100,
+    200,
+    300,
+    500,
+    1000
+];
+
+
+/* =========================
+   画面切り替え
+========================= */
+
+function openScreen(screenId) {
+
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+    });
+
+    document.getElementById(screenId).classList.add("active");
+
+    updateCoins();
+
+    if (screenId === "loginScreen") {
+        updateLoginDisplay();
+    }
+}
+
+
+/* =========================
+   コイン表示更新
+========================= */
+
+function updateCoins() {
+
+    document.querySelectorAll(
+        "#mainCoins, #gachaCoins, #miniCoins"
+    ).forEach(element => {
+
+        element.textContent = coins;
+
+    });
+
+    localStorage.setItem("coins", coins);
+}
+
+
+/* =========================
+   ログインボーナス
+========================= */
+
+function openLoginBonus() {
+
+    openScreen("loginScreen");
+
+    updateLoginDisplay();
+
+}
+
+
+/* 表示更新 */
+
+function updateLoginDisplay() {
+
+    for (let i = 1; i <= 5; i++) {
+
+        const day = document.getElementById("day" + i);
+
+        day.classList.remove("current");
+        day.classList.remove("received");
+
+        if (i < loginDay) {
+            day.classList.add("received");
+        }
+
+        if (i === loginDay) {
+            day.classList.add("current");
+        }
+    }
+
+
+    const today = new Date().toDateString();
+
+    const button = document.getElementById("loginButton");
+    const message = document.getElementById("loginMessage");
+
+
+    if (lastLogin === today) {
+
+        button.disabled = true;
+        button.style.opacity = "0.5";
+
+        message.textContent =
+            "今日はすでにログインボーナスを受け取りました！";
+
+    } else {
+
+        button.disabled = false;
+        button.style.opacity = "1";
+
+        message.textContent =
+            `${loginDay}日目の報酬を受け取れます！`;
+
+    }
+}
+
+
+/* 報酬受け取り */
+
+function receiveLoginBonus() {
+
+    const today = new Date().toDateString();
+
+
+    /* 今日すでに受け取っている */
+
+    if (lastLogin === today) {
+
+        alert("今日はすでに受け取っています！");
+
+        return;
+    }
+
+
+    /* 報酬 */
+
+    const reward = loginRewards[loginDay - 1];
+
+    coins += reward;
+
+
+    /* 保存 */
+
+    lastLogin = today;
+
+    localStorage.setItem("lastLogin", lastLogin);
+
+
+    /*
+       5日目まで行ったら
+       次は1日目へ
+    */
+
+    if (loginDay >= 5) {
+
+        loginDay = 1;
+
+    } else {
+
+        loginDay++;
+
+    }
+
+
+    localStorage.setItem("loginDay", loginDay);
+
+
+    updateCoins();
+    updateLoginDisplay();
+
+
+    alert(
+        `🎉 ログインボーナス！\n\n🪙 ${reward}コイン獲得！`
+    );
+}
+
+
+/* =========================
+   初期化
+========================= */
+
+updateCoins();
+
+</script>
+
+</body>
+</html>
